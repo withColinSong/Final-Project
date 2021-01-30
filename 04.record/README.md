@@ -1,0 +1,17 @@
+# 21.01.30
+
+> 와이어 프레임 기준으로 프론트 작업
+
+- 받은 메일함
+![](https://images.velog.io/images/withcolinsong/post/854b4da0-558a-42fc-bb3e-ef5566c91735/image.png)
+
+- 모달창
+![](https://images.velog.io/images/withcolinsong/post/230024ff-74ae-40b4-af27-e8218e525f8c/image.png)
+
+- 폴더 이동 모달창
+![](https://images.velog.io/images/withcolinsong/post/f575782c-94f4-489f-a600-a09a957724d7/image.png)
+
+
+## 1.1. 기록
+- 버튼 컬러는 어떻게 가야할 지?
+- 받은 메일함 뭔가 밋밋한 느낌
