@@ -1,0 +1,153 @@
+* {
+    margin: 0;
+    box-sizing: auto;
+}
+
+
+/* 메일, 받은메일함 영역 나누기 */
+.receiveAlignContainer {
+    margin-top: 30px auto;
+    padding: 20px;
+    display: flex;
+    border: 1px solid black;
+}
+
+/* 사이드바 */
+.receivceSideBarSection {
+    margin: 50px 30px;
+}
+
+.receivceSideBarSection > h1 {
+    margin-bottom: 20px;
+}
+
+.receivceSideBarSection > ul {
+    margin: 20px 0px;
+}
+
+.receivceSideBarSection > ul > li{
+    margin: 5px 0px;
+    list-style: none;
+    text-indent: 20px;
+}
+
+.receivceSideBarSection > ul > li > a {
+    text-decoration: none;
+    color: black;
+}
+/* 받은 메일함 세션 영역 */ 
+.receivceContents {
+    padding: 30px;
+    border: 2px solid black;
+    width: 1200px;
+    margin: 20px 30px;
+}
+
+
+/* 받은 메일함 */
+
+.revAlignHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 받은 메일함 > 검색 메일 */
+
+.revAlignHeader > h1 {
+    margin: 0;
+    width: 300px;
+}
+
+.revAlignHeader > div {
+    display: flex;
+}
+
+/* 스팸신고....... 리스트 */
+
+.revListAlign > ul {
+    display: flex;
+    align-items: center;
+    margin: 50px auto;
+    justify-content: space-around;
+    width: 1000px;
+}
+
+.revListAlign > ul > li {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0px 8px;
+    font-size: 25px;
+    
+}
+
+.revListAlign > ul > li > span{
+    margin: 5px;
+}
+
+/* 새 메일함 만들기 */
+.modalEmail{
+    height: 500px;
+}
+
+.modalNewEmailFolder {
+    padding: 30px;
+    margin: 50px auto;
+}
+
+.modalNewEmailFolder > input {
+    text-indent: 20px;
+    margin: 50px auto;
+    height: 50px;
+    width: 500px;
+}
+
+.modalNewEmailFolder > .modalNewEmailFolderBtn {
+    margin: 50px auto;
+    text-align: center;
+}
+
+.modalNewEmailFolder > .modalNewEmailFolderBtn > button {
+    margin: 0 20px;
+}
+
+/* 이동하기 */
+
+.modal-dialog > .modalMoveContent {
+    width: 500px;
+    text-align: center;
+}
+
+.modalMoveContent > .modalMoveBtn > h1 {
+    margin: 30px auto;
+}
+
+.modalMoveBtn > ul {
+    padding: 0px;
+    width: 300px;
+    margin: 0 auto;
+}
+
+.modalMoveBtn > ul > span {
+    width: 60px;
+
+}
+
+.modalMoveBtn > ul > li:nth-child(1) {
+    margin: 5px 0;
+    text-indent: -30px;
+    font-size: 25px;
+}
+
+.modalMoveBtn > ul > li {
+    width: 200px;
+    text-align: left;
+    list-style: none;
+
+}
+
+.modalMoveBtn > .modalMoveEmailBtn > button {
+    margin: 30px 20px;
+}
+

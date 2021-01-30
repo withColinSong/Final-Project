@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="member">
+	
+	<select id="pra" resultType="member.MemberVo">
+		SELECT * FROM members WHERE mid = #{_parameter}
+	</select>
+	
+	
+	<select id="song" resultType="String">
+		SELECT ename FROM emp01 WHERE ename = #{_parameter}  
+	</select>
+	
+	<select id="joins" resultType="member.UsersJoin">
+		SELECT * FROM usersjoin
+	</select>
+	
+	<select id="tot_list_size" parameterType="member.Page" resultType="member.MemberVo"> 
+	 SELECT * FROM (
+	   	SELECT ROWNUM no, m.* FROM (
+	  		SELECT * FROM members 
+		  		WHERE mid LIKE '%${findStr}%' OR email LIKE '%${findStr}%' OR phone LIKE '%${findStr}%' OR address LIKE '%${findStr}%'
+		  		ORDER BY NAME asc) m	
+		   ) WHERE no BETWEEN #{startNo} AND #{endNo} 
+	</select>
+</mapper>
