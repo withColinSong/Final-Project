@@ -3,13 +3,22 @@
     box-sizing: auto;
 }
 
+/* 헤더 테스트 */
+header > h1 {
+    height: 100px;
+    margin: 0;
+    border-bottom: 1px solid black;
+}
+
+
+.revAlignFixed {
+    width: 500px;
+}
 
 /* 메일, 받은메일함 영역 나누기 */
 .receiveAlignContainer {
-    margin-top: 30px auto;
-    padding: 20px;
     display: flex;
-    border: 1px solid black;
+    border-left: 1px solid black;
 }
 
 /* 사이드바 */
@@ -19,6 +28,7 @@
 
 .receivceSideBarSection > h1 {
     margin-bottom: 20px;
+    
 }
 
 .receivceSideBarSection > ul {
@@ -38,8 +48,7 @@
 /* 받은 메일함 세션 영역 */ 
 .receivceContents {
     padding: 30px;
-    border: 2px solid black;
-    width: 1200px;
+    width: 1400px;
     margin: 20px 30px;
 }
 
@@ -68,9 +77,14 @@
 .revListAlign > ul {
     display: flex;
     align-items: center;
-    margin: 50px auto;
-    justify-content: space-around;
-    width: 1000px;
+    margin: 50px 23px;
+    justify-content:space-between;
+    width: 1100px;
+    text-align: center;
+}
+
+.revListAlign > ul > li > label {
+    margin-bottom: 0;
 }
 
 .revListAlign > ul > li {
@@ -78,13 +92,81 @@
     align-items: center;
     list-style: none;
     margin: 0px 8px;
-    font-size: 25px;
-    
+    font-size: 23px;
 }
 
 .revListAlign > ul > li > span{
     margin: 5px;
 }
+
+/* 받은 메일함 수신자, 제목, 날짜 */
+.revSendMailContents {
+    margin-left: 50px;
+    margin-top: 50px;
+}
+
+
+
+.revTableClip {
+    transform: rotate(45deg);
+}
+
+.revTableTr {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    border-bottom: 1px solid #f4f4f4;
+    width: 1250px;
+}
+
+.lineAlignVertical {
+    border-left: 1px solid black;
+    margin: 0;
+}
+.revTableTr > td {
+    font-size: 20px;
+    margin: 10px 3px;
+    
+}
+
+.revTableTr > td:nth-child(1) {
+    height: 20px;
+    margin-left: 20px;
+}
+
+.revTableTr > td:nth-child(5) {
+    margin-left: 20px;
+}
+
+.revTableTr > td:nth-child(6) {
+    width: 700px;
+    margin-left: 30px;
+}
+
+.revTableTr > td:nth-child(7) {
+    width: 200px;    
+}
+
+.revTableTr > td:nth-child(3) {
+    color: red;
+}
+
+
+
+/* 스팸차단 */
+.modalSpamMoveBtn > h1 {
+    margin: 30px auto;
+}
+
+.modalSpamMoveBtn > h4 {
+    padding: 30px;
+    margin: 30px auto;
+}
+.modalSpamEmailBtn > button {
+    margin: 30px 20px;
+}
+
+
 
 /* 새 메일함 만들기 */
 .modalEmail{
@@ -149,5 +231,17 @@
 
 .modalMoveBtn > .modalMoveEmailBtn > button {
     margin: 30px 20px;
+}
+
+/* 페이징처리 */
+.navPageAlign {
+    margin: 50px auto;
+}
+
+.navPageAlign > nav > ul {
+    margin: 0 auto;
+    background-color: blue;
+    text-align: center;
+    width: 200px;
 }
 
