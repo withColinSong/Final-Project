@@ -1,3 +1,13 @@
+# 21.02.03
+- 받은 메일함 프론트 작업 중
+
+![](https://images.velog.io/images/withcolinsong/post/284d712e-690c-41e0-9196-cd360c6c7e3b/image.png)
+
+# 21.02.01
+
+![](https://images.velog.io/images/withcolinsong/post/d086b97a-4a67-45b2-b890-3855408d4769/image.png)
+
+
 # 21.01.30
 
 > 와이어 프레임 기준으로 프론트 작업
