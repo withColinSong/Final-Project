@@ -1,34 +1,5 @@
-# 21.02.04
-- 받은 메일함 프론트 작업 중 II
+# 🎉 작업 기록
 
-![](https://images.velog.io/images/withcolinsong/post/9581c4b0-d0d2-44c2-b295-7cf23ff85009/image.png)
-
-
-
-# 21.02.03
-- 받은 메일함 프론트 작업 중 I
-
-![](https://images.velog.io/images/withcolinsong/post/284d712e-690c-41e0-9196-cd360c6c7e3b/image.png)
-
-# 21.02.01
-
-![](https://images.velog.io/images/withcolinsong/post/d086b97a-4a67-45b2-b890-3855408d4769/image.png)
-
-
-# 21.01.30
-
-> 와이어 프레임 기준으로 프론트 작업
-
-- 받은 메일함
-![](https://images.velog.io/images/withcolinsong/post/854b4da0-558a-42fc-bb3e-ef5566c91735/image.png)
-
-- 모달창
-![](https://images.velog.io/images/withcolinsong/post/230024ff-74ae-40b4-af27-e8218e525f8c/image.png)
-
-- 폴더 이동 모달창
-![](https://images.velog.io/images/withcolinsong/post/f575782c-94f4-489f-a600-a09a957724d7/image.png)
-
-
-## 1.1. 기록
-- 버튼 컬러는 어떻게 가야할 지?
-- 받은 메일함 뭔가 밋밋한 느낌
+## 프론트 작업
+> 21.02.04
+- [받은 메일함 작성 중](21.02.04.md)
