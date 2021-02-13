@@ -28,6 +28,12 @@ CREATE TABLE email_receiver
     email_reftest NUMBER -- 테스트
 );
 
+
+ALTER TABLE email ADD CONSTRAINT email_no_pk PRIMARY KEY (email_no);
+
+ALTER TABLE email_receiver ADD CONSTRAINT email_rev_no_pk PRIMARY KEY (email_receiver_no);
+ALTER TABLE email_receiver ADD CONSTRAINT email_rev_FK FOREIGN KEY (email_no) REFERENCES email (email_no);
+
 ```
 
 - email
