@@ -41,6 +41,10 @@ VALUES(email_main_seq.nextval, 'song', 'songsong31235@gmail.com', '송연주', '
 '내용내용내용내용내용내용'
 , 1, '파일.png', '!', 0);
 
+INSERT INTO email 
+VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주', '안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, 
+'내용'
+, 1, '파일.png', '', 0);
 
 
 -- 데이터 삭제
