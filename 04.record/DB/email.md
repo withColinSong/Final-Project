@@ -11,7 +11,7 @@ CREATE TABLE email
   email_address VARCHAR(100),
   email_name VARCHAR(100),
   email_title VARCHAR(300),
-  email_date DATE,
+  email_date TIMESTAMP(6),
   email_contents CLOB,
   email_mailbox NUMBER,
   email_file VARCHAR(300),
