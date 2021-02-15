@@ -1,7 +1,11 @@
 # 🎉 작업 기록
 
+## 21.02.15
+- [백엔드 작업](21.02.15.md)
+> - input multiple 파일 데이터 가져오기
+
 ## 21.02.14
-- [DB] Email Table
+- [DB](DB/email.md) `Email Table`
 > - 메일함 읽기 spring boot mybatis 연결
 
 ## 21.02.11~13 DB 테이블 테스트
