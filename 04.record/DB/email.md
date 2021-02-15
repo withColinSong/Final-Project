@@ -8,19 +8,23 @@ CREATE TABLE email
 (
   email_no NUMBER ,
   email_mid VARCHAR(20),
-  email_address VARCHAR(100),
+  email_address VARCHAR(200),
+  email_send_address VARCHAR(200),
   email_name VARCHAR(100),
   email_title VARCHAR(300),
   email_date TIMESTAMP(6),
   email_contents CLOB,
   email_mailbox NUMBER,
-  email_file VARCHAR(300),
+  --email_file VARCHAR(300), 삭제?
   email_chk VARCHAR(20),
   email_delete NUMBER
 );
 
 -- SEQ
 CREATE SEQUENCE EMAIL_MAIN_SEQ;
+
+-- Primary Key
+ALTER TABLE email ADD CONSTRAINT email_main_pk PRIMARY KEY (email_no);
 
 -- 데이터 조회
 SELECT * FROM email ORDER BY email_date DESC;
