@@ -14,10 +14,11 @@ CREATE TABLE email_files
 CREATE SEQUENCE EMAIL_FILES_SEQ;
 
 -- Primary Key
-ALTER TABLE email_files ADD CONSTRAINT email_files_pk PRIMARY KEY (email_no);
+ALTER TABLE email_files ADD CONSTRAINT email_files_pk PRIMARY KEY (files_no));
 
 -- FOREIGN KEY
 ALTER TABLE email_files ADD CONSTRAINT email_files_fk FOREIGN KEY (email_no) REFERENCES email (email_no);
+
 
 -- 데이터 조회
 select b.* from email b , email_receiver a, email_files c WHERE b.email_no = 1;
