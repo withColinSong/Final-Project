@@ -6,8 +6,8 @@ CREATE TABLE email_files
 (
 	files_no NUMBER,
 	email_no NUMBER,
-	file_sysfile CLOB,
-	file_orifile CLOB
+	file_sysfile VARCHAR(4000),
+	file_orifile VARCHAR(4000)
 );
 
 -- SEQ
