@@ -7,10 +7,10 @@ CREATE TABLE email_receiver
     email_receiver_no NUMBER,
     email_no NUMBER,
     email_rev_name VARCHAR(100),
-    email_rev_address VARCHAR(200),
+    email_rev_address VARCHAR(500),
     email_rev_department VARCHAR(100),
-    email_ref VARCHAR(100),
-    email_mid VARCHAR(100),
+    email_ref NUMBER, -- 받는 사람은 0, 참조는 1
+    email_mid VARCHAR(200)
 );
 
 
@@ -27,13 +27,30 @@ ALTER TABLE email_receiver ADD CONSTRAINT email_rev_fk FOREIGN KEY (email_no) RE
 
 
 -- 데이터 삽입
-INSERT INTO email_files
-VALUES(EMAIL_REV_SEQ.nextval, 1, '송송송', 'song@gmail.com', '개발팀', 'ref@gmail.com', 'song');
 
+INSERT ALL
+INTO email VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주', 
+'안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, '내용', DEFAULT, DEFAULT, DEFAULT)
+
+-- 받은 사람
+INTO email_receiver (
+    email_rev_no,
+    email_no,
+    email_rev_address,
+    email_ref
+    )
+VALUES(emailMainSeq(), email_main_seq.currval, 'song1234@gmail.com', '참조')
+
+-- 파일
+INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
+INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
+INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
+
+SELECT * FROM dual;
 
 -- 데이터 삭제
 DROP SEQUENCE EMAIL_REV_SEQ;
-drop table email_receiver;
+DROP Table email_receiver;
 
 commit;
 
