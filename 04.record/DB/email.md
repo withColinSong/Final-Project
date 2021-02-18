@@ -34,14 +34,14 @@ ALTER TABLE email MODIFY email_delete DEFAULT 0;
 SELECT * FROM email ORDER BY email_date DESC;
 
 -- 데이터 삽입
-INSERT INTO email 
-VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주', '안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, 
-'내용', 1, '!', 0);
+INSERT 
+INTO email VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주', 
+'안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, '내용', DEFAULT, DEFAULT, DEFAULT);
 
 
 INSERT ALL
 INTO email VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주', 
-'안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, '내용', 1, '!', 0)
+'안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, '내용', DEFAULT, DEFAULT, DEFAULT)
 
 INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
 INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
