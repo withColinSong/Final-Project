@@ -38,11 +38,21 @@ INSERT
 INTO email VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주', 
 '안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, '내용', DEFAULT, DEFAULT, DEFAULT);
 
-
+-- 메일함
 INSERT ALL
 INTO email VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주', 
 '안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, '내용', DEFAULT, DEFAULT, DEFAULT)
 
+-- 받은 사람
+INTO email_receiver (
+    email_rev_no,
+    email_no,
+    email_rev_address,
+    email_ref
+    )
+VALUES(emailMainSeq(), email_main_seq.currval, 'song1234@gmail.com', '참조')
+
+-- 파일
 INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
 INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
 INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
