@@ -14,7 +14,7 @@ CREATE TABLE email
   email_date TIMESTAMP(6),
   email_contents CLOB,
   email_mailbox NUMBER DEFAULT 3,
-  email_chk NUMBER DEFAULT 0,
+  email_chk CHAR(4),
   email_delete NUMBER DEFAULT 0
 );
 
@@ -36,12 +36,12 @@ SELECT * FROM email ORDER BY email_date DESC;
 -- 데이터 삽입
 INSERT 
 INTO email VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주', 
-'안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, '내용', DEFAULT, DEFAULT, DEFAULT);
+'안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, '내용', DEFAULT, '', DEFAULT);
 
 -- 메일함
 INSERT ALL
 INTO email VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주', 
-'안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, '내용', DEFAULT, DEFAULT, DEFAULT)
+'안녕하세요 프론트 작업 중입니다.', SYSTIMESTAMP, '내용', DEFAULT, '', DEFAULT)
 
 -- 받은 사람
 INTO email_receiver (
@@ -68,14 +68,5 @@ commit;
 ```
 
 
-- 함수
-```sql
-CREATE OR REPLACE FUNCTION emailMainSeq 
-RETURN NUMBER 
-IS
-    seq NUMBER;
-BEGIN
-    SELECT EMAIL_MAIN_SEQ.nextval INTO seq FROM dual;
-    RETURN seq;
-END;
+
 ```
