@@ -6,7 +6,7 @@ CREATE TABLE email
 (
   email_no NUMBER ,
   member_no NUMBER,
-  email_mid VARCHAR(20),
+  member_mid VARCHAR(20),
   email_address VARCHAR(200),
   email_name VARCHAR(100),
   email_title VARCHAR(300),
