@@ -7,6 +7,7 @@
 CREATE TABLE email
 (
   email_no NUMBER ,
+  member_no NUMBER,
   email_mid VARCHAR(20),
   email_address VARCHAR(200),
   email_name VARCHAR(100),
@@ -40,8 +41,18 @@ INTO email VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주',
 
 -- 메일함
 INSERT ALL
-INTO email VALUES(email_main_seq.nextval, 'song', 'song@gmail.com', '송연주', 
-'안녕하세요 프론트 작업 중입니다.', SYSDATE, '내용', DEFAULT, '', DEFAULT)
+INTO email VALUES(
+    email_main_seq.nextval,
+    1, 
+    'song', 
+    'song@gmail.com', 
+    '송연주', 
+    '안녕하세요 프론트 작업 중입니다.', 
+    SYSDATE, 
+    '내용', 
+    DEFAULT, 
+    '', 
+    DEFAULT)
 
 -- 받은 사람
 INTO email_receiver (
@@ -50,12 +61,14 @@ INTO email_receiver (
     email_rev_address,
     email_ref
     )
-VALUES(emailMainSeq(), email_main_seq.currval, 'song1234@gmail.com', '참조')
+VALUES(emailMainSeq(), email_main_seq.currval, 'song1234@gmail.com', 0)
 
 -- 파일
 INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
 INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
 INTO email_files VALUES(emailMainSeq(), email_main_seq.currval, '', '파일.png')
+
+SELECT * FROM dual;
 
 SELECT * FROM dual;
 
