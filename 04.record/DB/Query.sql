@@ -1,7 +1,8 @@
 BEGIN
     FOR i IN 1..300 LOOP
     INSERT INTO email
-    values(email_main_seq.nextval, 'haha', 
+    values(email_main_seq.nextval, 'haha',
+    1, 
     'haha@gmail.com', 
     'haha', 
     '안녕하세요 프론트 작업 중입니다.', 
