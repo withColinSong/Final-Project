@@ -10,7 +10,7 @@ CREATE TABLE email
   email_address VARCHAR(200),
   email_name VARCHAR(100),
   email_title VARCHAR(300),
-  email_date DATE,
+  email_date TIMESTAMP,
   email_contents CLOB,
   email_mailbox NUMBER DEFAULT 3,
   email_chk CHAR(4),
@@ -69,7 +69,8 @@ CONSTRAINT member_pk PRIMARY KEY (MEMBER_NO)
 
 
 INSERT INTO member
-VALUES(1, 
+VALUES(
+1, 
 'song', 
 '1234', 
 '송코딩', 
@@ -121,7 +122,7 @@ INTO email VALUES(
     'song@gmail.com', 
     '송연주', 
     '안녕하세요 프론트 작업 중입니다.', 
-    SYSDATE, 
+    SYSTIMESTAMP, 
     '내용', 
     DEFAULT, 
     '', 
