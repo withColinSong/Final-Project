@@ -14,7 +14,7 @@ CREATE TABLE email
   email_title VARCHAR(300),
   email_date TIMESTAMP,
   email_contents CLOB,
-  email_mailbox NUMBER DEFAULT 3, --받은 메일함 1	중요 메일함 2	임시 보관함 3	보낸 메일함 4	스팸 메일함 5	휴지통 6
+  email_mailbox NUMBER DEFAULT 3, -- 중요 메일함 1	임시 보관함 2	보낸 메일함 3	스팸 메일함 4	휴지통 5
   email_chk CHAR(4),
   email_delete NUMBER DEFAULT 0,
 
