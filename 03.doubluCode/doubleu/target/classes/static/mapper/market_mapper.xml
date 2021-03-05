@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.doubleu.market.mybatis.MarketMapper">
+<!-- 판매내역 -->
+	<select id="selectMine" resultType="com.doubleu.market.vo.MarketVo" parameterType="com.doubleu.market.vo.MarketPage"
+	resultMap="marketList">
+	select * from (
+  			select rownum no, m.* from (  
+					select * from market mk join market_files att on mk.market_no=att.market_no
+				 	where files_main = 1 and market_writer = #{marketWriter}
+				 	 order by mk.market_date desc ) m   
+				 	) where no between #{startNo} and #{endNo}
+	</select>
+	
+	<select id="selectMineCnt" resultType="int" parameterType="com.doubleu.market.vo.MarketPage">
+	select count(*) 
+    from market mk join market_files mf  on mk.market_no = mf.market_no
+    where mf.files_main = 1 and market_writer = #{marketWriter} 
+	</select>
+	
+	<select id="totListSizeMine" resultType='int' parameterType="com.doubleu.market.vo.MarketPage">
+		select count(mk.market_no) 
+         from market mk join market_files mf  on mk.market_no = mf.market_no
+         where mf.files_main = 1 and market_writer = #{marketWriter} 
+	</select>
+<!-- 조회수 -->
+
+	<update id="updateHit" parameterType="com.doubleu.market.vo.MarketVo" >
+		update market set market_hit = #{marketHit}
+					  where market_no = #{marketNo}
+	</update>
+<!-- delete -->
+
+	<delete parameterType="com.doubleu.market.vo.MarketVo" id="delete">
+		delete from market where market_no=#{marketNo}
+	</delete>
+	
+	<delete parameterType="Integer" id="deleteAttNo">
+		delete from market_files where market_no = #{_parameter} 
+	</delete>
+	
+	
+<!-- update -->
+	<update id="update" parameterType="com.doubleu.market.vo.MarketVo" >
+		update market set market_category = #{marketCategory}, 
+						  market_subject=#{marketSubject},
+						  market_price = #{marketPrice}, 
+						  market_account=#{marketAccount}, 
+						  market_doc=#{marketDoc},  
+						  market_date = SYSDATE, 
+						  market_bank=#{marketBank}
+		where market_no = #{marketNo}
+	</update>
+	
+	<delete parameterType="com.doubleu.market.vo.MarketVo" id="deleteAtt">
+		delete from market_files 
+		<where>
+			<foreach item="att" collection="delFiles" separator="or">
+				files_sysfile = #{att.sysFile} 
+			</foreach>
+		</where>
+	</delete>
+	<insert id="insertAtt" parameterType="com.doubleu.market.vo.MarketVo" >
+		INSERT ALL
+		<foreach collection="attlist" item="att">
+			INTO market_files(files_no, market_no, files_sysfile, files_orifile)
+			VALUES (getMarketAttSeq(), ${marketNo}, #{att.sysFile, jdbcType=VARCHAR}, #{att.oriFile})
+		</foreach>
+		SELECT * FROM dual
+	</insert>
+	
+
+<!-- view -->
+	<select id="view" resultType="com.doubleu.market.vo.MarketVo" parameterType="int" resultMap="marketList">
+		select * from market where market_no = #{_parameter}
+	</select>
+<!-- select -->	
+
+	<select id="selectMarketMain" resultMap="marketList" resultType="com.doubleu.market.vo.MarketVo" >
+		select mk.market_no market_no, mk.market_category market_category, mk.market_writer market_writer , mk.market_subject market_subject, mk.market_price market_price, mk.market_hit market_hit 
+		from market mk join market_files att on mk.market_no=att.market_no
+		where files_main = 1 
+		order by mk.market_date desc
+	</select>
+	<select id="selectAtt" resultMap="attList" resultType="com.doubleu.market.vo.MarketAttVo" parameterType="int">
+		select * from market_files where market_no = #{_parameter}
+	</select>
+	<select id="selectAttOne" resultMap="attList" resultType="com.doubleu.market.vo.MarketAttVo">
+		select market_no, files_orifile from market_files where files_main = 1
+	</select>
+	
+	<select id="totListSize" resultType='int' parameterType="com.doubleu.market.vo.MarketPage">
+		select count(mk.market_no) 
+         from market mk join market_files mf  on mk.market_no = mf.market_no
+         where mf.files_main = 1
+		<if test="findStr != '' and findType == '' ">
+			and market_subject like '%${findStr}%'	 
+		</if>
+		<if test="findStr != '' and findType != ''">
+			and market_category = '${findType}' and market_subject like '%${findStr}%'
+		</if>
+		<if test="findStr == '' and findType != ''">
+			and market_category = '${findType}' and market_subject like '%${findStr}%'
+		</if>
+	</select>
+	
+	<select id="select2" resultMap="marketList" >
+		select * from market
+	
+	</select>
+ 	<!--<select id="select" resultType="com.doubleu.market.vo.MarketVo" parameterType="com.doubleu.market.vo.MarketPage"
+	resultMap="marketList">
+  		select * from (
+  			select rownum no, m.* from (  
+					select * from market mk join market_files att on mk.market_no=att.market_no
+				 	where market_subject like '%${findStr}%' and files_main = 1 order by mk.market_no desc ) m   
+				 	) where no between #{startNo} and #{endNo}
+	</select> -->
+ 	<select id="select" resultType="com.doubleu.market.vo.MarketVo" parameterType="com.doubleu.market.vo.MarketPage"
+	resultMap="marketList">
+  		select * from (
+  			select rownum no, m.* from (  
+					select * from market mk join market_files att on mk.market_no=att.market_no
+				 	where files_main = 1 
+				 	<if test="findStr != '' and findType == '' ">
+				 	and market_subject like '%${findStr}%'	 
+				 	</if>
+				 	<if test="findStr != '' and findType != ''">
+					and market_category = '${findType}' and market_subject like '%${findStr}%'
+					</if>
+					<if test="findStr == '' and findType != ''">
+					and market_category = '${findType}' and market_subject like '%${findStr}%'
+					</if>
+					
+				 	 order by mk.market_date desc ) m   
+				 	) where no between #{startNo} and #{endNo}
+	</select> 
+	<!-- index게시글 총 갯수 -->
+	<select id="totalCount" resultType="int">
+		select count(*) from market
+	</select>
+	<!-- select게시글 총 갯수 -->
+	<select id="selectCount" resultType="int" parameterType="com.doubleu.market.vo.MarketPage">
+		 select count(mk.market_no) 
+         from market mk join market_files mf  on mk.market_no = mf.market_no
+         where mf.files_main = 1
+		<if test="findStr != '' and findType == '' ">
+				 	and market_subject like '%${findStr}%'	 
+				 	</if>
+				 	<if test="findStr != '' and findType != ''">
+					and market_category = '${findType}' and market_subject like '%${findStr}%'
+					</if>
+					<if test="findStr == '' and findType != ''">
+					and market_category = '${findType}' and market_subject like '%${findStr}%'
+					</if>
+	</select>
+
+<!-- insert -->
+	<insert id = 'insert' parameterType="com.doubleu.market.vo.MarketVo">
+		insert all
+		into market(market_no, market_category, market_writer, market_subject, market_price, market_account, market_doc, market_hit, market_date, market_bank)
+		values(market_seq.nextval, #{marketCategory, jdbcType=VARCHAR}, #{marketWriter, jdbcType=VARCHAR}, #{marketSubject}, #{marketPrice}, #{marketAccount}, #{marketDoc},#{marketHit}, SYSDATE, #{marketBank})
+		<if test="attlist != null">
+			<foreach collection="attlist" item="att">
+				into market_files(files_no, market_no, files_sysfile, files_orifile, files_main)
+				values (getMarketAttSeq(), market_seq.currval, #{att.sysFile, jdbcType=VARCHAR}, #{att.oriFile}, #{att.filesMain})
+			</foreach>
+		</if>
+		select * from dual		
+	</insert>
+	
+
+	
+	
+	
+	<!-- resultMap -->
+	<resultMap id="marketList" type="com.doubleu.market.vo.MarketVo">
+		<result property="marketSubject" column="market_subject" /> 	
+		<result property="marketNo" column="market_no" /> 	
+		<result property="marketCategory" column="market_category" /> 	
+		<result property="marketPrice" column="market_price" /> 	
+		<result property="marketAccount" column="market_account" /> 	
+		<result property="marketDoc" column="market_doc" /> 	
+		<result property="marketHit" column="market_hit" /> 	
+		<result property="marketDate" column="market_date" /> 	
+		<result property="marketWriter" column="market_writer" /> 	
+		<result property="marketBank" column="market_bank" /> 	
+		<result property="oriFile" column="files_orifile" /> 	
+		<result property="marketDib" column="market_dib" /> 	
+		
+	</resultMap>
+	
+	<resultMap type="com.doubleu.market.vo.MarketAttVo" id="attList">
+		<result property="filesNo" column="files_no"/>
+		<result property="MarketNo" column="market_no"/>
+		<result property="sysFile" column="files_sysfile"/>
+		<result property="oriFile" column="files_orifile"/>
+		<result property="filesMain" column="files_main"/>
+	</resultMap>
+
+</mapper>
+
+

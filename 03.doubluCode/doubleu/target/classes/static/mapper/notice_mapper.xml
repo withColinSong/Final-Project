@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.doubleu.notice.mybatis.NoticeMapper">
+	<insert id="insert" parameterType="com.doubleu.notice.vo.NoticeVo">
+		insert all
+		into NOTICE(
+			notice_No, 
+			notice_Subject, 
+			notice_Mid, 
+			notice_ReportingDate, 
+			notice_PostType, 
+			notice_PostStartDate, 
+			notice_PostEndDate, 
+			notice_Type, 
+			notice_Hit, 
+			notice_Doc 
+			)
+		values(
+			seq_notice_No.nextval, 
+			#{noticeSubject}, 
+			#{noticeMid}, 
+			SYSDATE, 
+			#{noticePostType}, 
+			#{noticePostStartDate}, 
+			#{noticePostEndDate}, 
+			#{noticeType}, 
+			0, 
+			#{noticeDoc} 
+			)
+		<if test="attList != null">
+			<foreach collection="attList" item="att">
+				into notice_files(
+					notice_files_no, 
+					notice_no, 
+					file_sysfile, 
+					file_orifile
+				)
+				values(
+					seq_notice_files_no.nextval,
+					seq_notice_no.currval,
+					#{att.sysFile, jdbcType=VARCHAR},
+					#{att.oriFile, jdbcType=VARCHAR}
+				)
+			</foreach>
+		</if>	
+		SELECT * FROM dual
+	</insert>
+	
+	<!-- 페이지 -->
+	<select id="totListSizeMain" resultType='int' parameterType="com.doubleu.notice.vo.NoticePage">
+		SELECT count(notice_no) 
+		FROM notice
+		
+	  <if test="findStr !=''">
+         where notice_subject like '%${findStr}%' or notice_doc = '%${findStr}%'  
+      </if>
+      
+	</select>
+	
+ <select id="selectPaging" 
+	 resultMap="NoticeVo" 
+	 parameterType="com.doubleu.notice.vo.NoticePage">
+	 
+	 
+	    SELECT notice_no, 
+			   notice_subject, 
+			   notice_mid, 
+			   to_char(notice_reportingdate, 'YYYY-MM-DD') as notice_reportingdate, 
+			   notice_postType, 
+			   notice_postStartDate,  
+			   notice_postEndDate, 
+			   notice_type, 
+			   notice_hit, 
+			   notice_doc  
+		 FROM (
+	        SELECT rownum no, m.* from (  
+	           SELECT * FROM notice
+	           <if test="findStr !=''">
+       			  where notice_subject like '%${findStr}%' or notice_doc = '%${findStr}%'  
+      		  </if>
+				order by notice_type desc, notice_no desc
+	           ) m
+	        ) WHERE no between ${startNo} and ${endNo}
+	
+	</select>
+	
+	<select id="select" resultMap="NoticeVo">
+		<![CDATA[
+			select notice_no, 
+				   notice_subject, 
+				   notice_mid, 
+				   to_char(notice_reportingdate, 'YYYY-MM-DD') as notice_reportingdate, 
+				   notice_postType, 
+				   notice_postStartDate,  
+				   notice_postEndDate, 
+				   notice_type, 
+				   notice_hit, 
+				   notice_doc 
+			from NOTICE 
+			order by notice_type desc
+		]]>
+	</select>
+	
+	<select id="view" parameterType="Int" resultMap="NoticeVo">
+		<![CDATA[
+			select notice_no, 
+				   notice_subject, 
+				   notice_mid, 
+				   to_char(notice_reportingdate, 'YYYY-MM-DD') as notice_reportingdate, 
+				   notice_postType, 
+				   notice_postStartDate,  
+				   notice_postEndDate, 
+				   notice_type, 
+				   notice_hit, 
+				   notice_doc 
+			from NOTICE 
+			where notice_no = #{_parameter}
+		]]>
+	</select>
+	
+ 	<select id="view1" parameterType="int" resultMap="attList">
+		<![CDATA[
+			select notice_files_no, 
+				   notice_no, 
+				   file_sysfile, 
+				   file_orifile 
+			from notice_files
+			where notice_no = #{_parameter}
+		]]>
+	</select>
+	
+	
+	<update id="update" parameterType="com.doubleu.notice.vo.NoticeVo" >
+		<![CDATA[
+			update NOTICE 
+			set
+				notice_subject = #{noticeSubject}, 
+				notice_reportingdate = #{noticeReportingDate}, 
+				notice_postType = #{noticePostType}, 
+				notice_postStartDate = #{noticePostStartDate}, 
+				notice_postEndDate = #{noticePostEndDate},
+				notice_type = #{noticeType}, 
+				notice_doc = #{noticeDoc} 
+			where notice_no = #{noticeNo} 
+		]]>
+	</update>
+	
+	<!-- 조회수 -->
+	<update id="updateHit" parameterType="int">
+	<![CDATA[
+			update NOTICE 
+			set notice_hit = notice_hit + 1 
+			where notice_no = #{_parameter} 
+	]]>
+	</update>
+	
+	<!-- 게시기간에 따른 일반공지 전환 -->
+	<update id="updatePost">
+	<![CDATA[
+			update NOTICE
+			set notice_type = '일반공지'
+			where notice_postEndDate < SYSDATE
+            and notice_type = '중요공지'
+	]]>
+	</update>
+
+	
+	<select id="delete" parameterType="int">
+		<![CDATA[
+			delete from NOTICE where notice_no = #{_parameter}
+		]]>
+	</select>
+
+	<resultMap id="NoticeVo" type="com.doubleu.notice.vo.NoticeVo">
+		<result property="noticeNo" column="Notice_no"/>
+		<result property="noticeSubject" column="Notice_subject"/>
+		<result property="noticeMid" column="Notice_mid"/>
+		<result property="noticeReportingDate" column="Notice_reportingDate"/>
+		<result property="noticePostType" column="Notice_postType"/>
+		<result property="noticePostStartDate" column="Notice_postStartDate"/>
+		<result property="noticePostEndDate" column="Notice_postEndDate"/>
+		<result property="noticeType" column="Notice_type"/>
+		<result property="noticeHit" column="Notice_hit"/>
+		<result property="noticeDoc" column="Notice_doc"/>
+	</resultMap>
+	
+	<resultMap id="attList" type="com.doubleu.notice.vo.NoticeAttVo">
+		<result property="noticeFilesNo" column="notice_files_no"/>
+		<result property="noticeNo" column="notice_no"/>
+		<result property="sysFile" column="file_sysfile"/>
+		<result property="oriFile" column="file_orifile"/>
+	</resultMap>
+	
+</mapper>
+
+		

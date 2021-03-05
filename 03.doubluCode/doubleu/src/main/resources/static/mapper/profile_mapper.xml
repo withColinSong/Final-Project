@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.doubleu.profile.mybatis.ProfileMapper">
+
+	<select id="selectProfile" parameterType="com.doubleu.profile.vo.ProfileVo" resultMap="selectProfileData">
+		SELECT * FROM member
+	</select>
+
+
+	<resultMap id="selectProfileData" type="com.doubleu.profile.vo.ProfileVo">
+ 
+	<result property="memberNo" column="member_no" /> 
+	<result property="memberMid" column="member_mid" /> 
+	<result property="memberPwd" column="member_pwd" /> 
+	<result property="memberName" column="member_name" /> 
+	<result property="memberEmail" column="member_email" /> 
+	<result property="memberDepartment" column="member_department"  />
+	<result property="memberTeam" column="member_team"  /> 
+	<result property="memberPhoneNumber" column="member_phonenumber"/>  
+	<result property="memberZipcode" column="member_zipcode" />
+	<result property="memberAddress" column="member_address" /> 
+	<result property="memberPosition" column="member_position" /> 
+	
+	</resultMap>
+	
+	<insert id="startWork" parameterType="com.doubleu.profile.vo.WorkVo">
+		<![CDATA[
+			insert into WORK(
+				work_no,
+				member_no,
+				work_date,
+				work_start
+				)
+			values(
+				work_seq.nextval, 
+				#{memberNo}, 
+				#{workDate}, 
+				#{workStart}
+				)
+		]]>
+	</insert>
+	
+	<update id="endWork" parameterType="com.doubleu.profile.vo.WorkVo">
+		<![CDATA[
+			UPDATE WORK SET
+				work_finish=#{workFinish}
+			WHERE
+			work_no = #{workNo}
+		]]>
+	</update>
+	
+	<select id="selectWork" parameterType="com.doubleu.profile.vo.WorkVo" resultMap="selectWorkData">
+		SELECT * FROM WORK
+	</select>
+
+	<select id="selectWorkOne" parameterType="int" resultMap="selectWorkData">
+		<![CDATA[select * from work where member_no = #{_parameter} and  work_no=(select max(work_no)from work where member_no=#{_parameter})  ]]>
+	</select>
+
+	<select id="selectMain" parameterType="int" resultMap="selectWorkData">
+		<![CDATA[select * from work where member_no = #{_parameter} and  work_no=(select max(work_no)from work where member_no=#{_parameter}) and work_date like '2021-03-04' ]]>
+	</select>
+	<!-- <select id="selectPlus" parameterType="int" resultType="int">
+		<![CDATA[ select MOD(to_date(work_finish,'DDHH24MI') -TO_DATE(work_start,'YYYYMMDDHH24MI'),1)*24from dual  where member_no = #{_parameter} ; ]]>
+	</select> -->
+	<select id="selectWork1" resultMap="selectWorkData">
+	<![CDATA[SELECT * FROM work where work_date like '2021-01-%']]>
+	</select>
+	<select id="selectWork2" resultMap="selectWorkData">
+		<![CDATA[SELECT * FROM work where work_date like '2021-02-%']]>
+	</select>
+	<select id="selectWork3" resultMap="selectWorkData">
+		<![CDATA[SELECT * FROM work where work_date like '2021-03-%']]>
+	</select>
+	<resultMap id="selectWorkData" type="com.doubleu.profile.vo.WorkVo">
+ 
+	<result property="workNo" column="work_no" /> 
+	<result property="memberNo" column="member_no" /> 
+	<result property="workMid" column="member_mid" /> 
+	<result property="workDate" column="work_date" /> 
+	<result property="workStart" column="work_start" /> 
+	<result property="workFinish" column="work_finish"  />
+	<result property="workTotal" column="work_total"  /> 
+	<result property="workPlus" column="work_plus"/>  
+	
+	</resultMap>
+	
+</mapper>
+	

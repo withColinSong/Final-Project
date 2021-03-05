@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.doubleu.email.mybatis.EmailMapper">
+	<!-- select -->
+	
+	<!-- 메일함 사이드 바 받은 메일함 cnt -->
+	<select id="selectSendEmail" resultType="int" parameterType="com.doubleu.email.vo.EmailMainVo">
+		SELECT count(a.email_no) FROM 
+			email a,
+			email_receiver b
+			WHERE a.email_no = b.email_no
+			AND b.email_rev_address = #{emailAddress}
+			AND a.email_mailBox = ${emailMailBox}
+	</select>
+	
+
+	
+    <!-- 페이지 -->
+	<select id="totListSizeMain" resultType='int' parameterType="com.doubleu.email.vo.EmailPage">
+		SELECT count(a.email_no) FROM 
+			email a,
+			email_receiver b
+			WHERE a.email_no = b.email_no
+			AND b.email_rev_address = #{emailAddress}
+			AND a.email_mailBox = ${emailMailBox}
+	</select>
+	
+	 <select id="selectPaging" 
+	 resultMap="getEmailListSelect" 
+	 parameterType="com.doubleu.email.vo.EmailPage">
+	    SELECT * FROM (
+	        SELECT rownum no, m.* from (  
+	           SELECT a.* FROM 
+				email a,
+				email_receiver b
+				WHERE a.email_title LIKE '%${findStr}%'
+				AND a.email_no = b.email_no
+				AND b.email_rev_address = #{emailAddress}
+				AND a.email_mailBox = ${emailMailBox}
+				ORDER BY a.email_date DESC
+	           ) m
+	        ) WHERE no between ${startNo} and ${endNo}
+	</select>
+	
+	<!-- 임시저장 -->
+	<select id="totListSizeTemp" resultType='int' parameterType="com.doubleu.email.vo.EmailPage">
+		SELECT count(email_no) FROM email
+                WHERE email_mailBox = ${emailMailBox}
+                AND email_address = #{emailAddress}
+                AND email_delete = 0
+                ORDER BY email_date DESC
+	</select>
+	
+	<select id="selectTemp"  
+	resultMap="getEmailListSelect" 
+	 parameterType="com.doubleu.email.vo.EmailPage">
+		 SELECT * FROM (
+	        SELECT rownum no, m.* from (  
+	          SELECT * from email
+                WHERE email_mailBox = ${emailMailBox}
+                AND email_address = #{emailAddress}
+                AND email_delete = 0
+                ORDER BY email_date DESC
+	           ) m
+	        ) WHERE no between ${startNo} and ${endNo}		            
+	</select>
+	
+	<select id="selectEmailNo" parameterType="int" resultMap="getEmailListSelect">
+		SELECT * FROM email
+		WHERE email_no = #{emailNo}
+	</select>
+	
+	<select id="emailMailSelect" resultMap="getEmailListSelect">
+	          SELECT * from email
+	          	WHERE email_title LIKE '%${findStr}%' 
+                AND email_mailBox = ${emailMailBox}
+                AND email_address = #{emailAddress}
+                ORDER BY email_date DESC
+	</select>
+	<!-- 주소록 -->
+	<select id="selectMembers" resultMap="memberList">
+		SELECT member_name, member_email, member_team FROM member
+	</select>
+	
+	
+	<select id="selectFiles" parameterType="int" resultMap="attList">
+		SELECT b.file_orifile, a.* 
+		FROM email a, email_files b 
+		WHERE a.email_no = b.email_no AND a.email_no = #{emailNo}
+	</select>
+	
+	<!-- 받는 사람 -->
+	<select id="selectSendPerson" parameterType="int" resultMap="revList">
+		SELECT c.*, a.email_no
+		FROM email a, email_receiver c 
+		WHERE a.email_no = c.email_no 
+		AND c.email_ref = 0 
+		AND a.email_no = #{emailNo}
+	</select>
+	
+	<!-- 참조 -->
+	<select id="selectRefPerson" parameterType="int" resultMap="revList">
+		SELECT c.*, a.email_no
+		FROM email a, email_receiver c 
+		WHERE a.email_no = c.email_no 
+		AND c.email_ref = 1
+		AND a.email_no = #{emailNo}
+	</select>
+	
+	
+	<!-- 주소록 멤버 조회하기 -->
+	<select id="memberFindStrName" parameterType="String" resultMap="memberList">
+		SELECT * FROM member
+			WHERE member_team LIKE '%${findStr}%'
+	</select>
+	
+	<!-- 답장하기 -->
+	<select id="replyWriteMail" parameterType="int" resultMap="getEmailListSelect">
+	SELECT * from EMAIL
+		WHERE email_no = ${parameter}
+	</select>
+	
+	<!-- insert -->
+	<insert id='insertSendWrite' parameterType="com.doubleu.email.vo.EmailMainVo">
+		INSERT ALL
+		INTO email(
+		email_no, 
+		member_no,
+		member_mid,
+		email_address, 
+		email_name, 
+		email_title, 
+		email_date, 
+		email_contents, 
+		email_mailbox, 
+		email_chk, email_delete) 
+		VALUES(
+		email_main_seq.nextval,
+		#{memberNo},
+		#{memberMid}, 
+		#{emailAddress, jdbcType=VARCHAR}, #{emailName, jdbcType=VARCHAR}, 
+		#{emailTitle, jdbcType=VARCHAR}, SYSTIMESTAMP, 
+		#{emailContents, jdbcType=VARCHAR}, 
+		3, 
+		#{emailChk}, 
+		default)
+
+		<if test="attFileList != null">
+			<foreach collection="attFileList" item="att">
+				INTO email_files(files_no, email_no, file_sysfile, file_orifile)
+				VALUES (
+				emailMainSeq(), 
+				email_main_seq.currval, 
+				#{att.sysFile, jdbcType=VARCHAR}, 
+				#{att.oriFile})
+			</foreach>
+		</if> 
+		
+		<if test="emailRevList != null">
+			<foreach collection="emailRevList" item="rev">
+				INTO email_receiver (
+					    email_rev_no,
+					    email_no,
+					    email_rev_address,
+					    email_ref)
+				VALUES(
+				emailMainSeq(), 
+				email_main_seq.currval, 
+				#{rev.emailReceiverAddress, jdbcType=VARCHAR}, 
+				#{rev.emailReceiverRef, jdbcType=VARCHAR})
+			</foreach>
+		</if>
+		SELECT * FROM dual
+	</insert>
+	
+	
+	<insert id='insertTemporary'
+		parameterType="com.doubleu.email.vo.EmailMainVo">
+		INSERT ALL
+		INTO email(
+		email_no, 
+		member_no,
+		member_mid,
+		email_address, 
+		email_name, 
+		email_title, 
+		email_date, 
+		email_contents, 
+		email_mailbox, 
+		email_chk, email_delete) 
+		VALUES(
+		email_main_seq.nextval,
+		#{memberNo},
+		#{memberMid}, 
+		#{emailAddress, jdbcType=VARCHAR}, #{emailName, jdbcType=VARCHAR}, 
+		#{emailTitle, jdbcType=VARCHAR}, SYSTIMESTAMP, 
+		#{emailContents, jdbcType=VARCHAR}, 
+		2, 
+		#{emailChk, jdbcType=VARCHAR}, 
+		default)
+
+		<if test="attFileList != null">
+			<foreach collection="attFileList" item="att">
+				INTO email_files(files_no, email_no, file_sysfile, file_orifile)
+				VALUES (
+				emailMainSeq(), 
+				email_main_seq.currval, 
+				#{att.sysFile, jdbcType=VARCHAR}, 
+				#{att.oriFile})
+			</foreach>
+		</if> 
+		
+		<if test="emailRevList != null">
+			<foreach collection="emailRevList" item="rev">
+				INTO email_receiver (
+					    email_rev_no,
+					    email_no,
+					    email_rev_address,
+					    email_ref)
+				VALUES(
+				emailMainSeq(), 
+				email_main_seq.currval, 
+				#{rev.emailReceiverAddress, jdbcType=VARCHAR}, 
+				#{rev.emailReceiverRef, jdbcType=VARCHAR})
+				
+				<!-- VALUES(emailMainSeq(), email_main_seq.currval, #{emailReceiverName}, #{emailReceiverAddress}, #{emailReceiverDept}, #{emailReceiverRef}, #{emailMid}) -->
+			</foreach>
+		</if>
+		SELECT * FROM dual
+	</insert>
+	
+	
+	<!-- update -->
+	<update id="updateSendTrash"
+	parameterType="com.doubleu.email.vo.EmailMainVo">
+		UPDATE email 
+		SET
+		email_mailBox = ${emailMailBox}
+		WHERE email_no = ${emailNo}
+	</update>
+	
+	<!-- update -->
+	<update id="updateMoveEmail"
+	parameterType="com.doubleu.email.vo.EmailMainVo">
+		UPDATE email 
+		SET
+		email_mailBox = ${emailMailBox}
+		WHERE email_no = ${emailNo}
+	</update>
+	
+	<!-- delete -->
+	<update id="updateAllDelete" 
+	parameterType="com.doubleu.email.vo.EmailMainVo">
+		UPDATE email 
+		SET
+		email_delete = 1
+		WHERE email_no = ${emailNo}
+	</update>
+
+
+	<resultMap id="getEmailListSelect" type="com.doubleu.email.vo.EmailMainVo">
+ 
+	<result property="emailNo" column="email_no" />
+	<result property="memberNo" column="member_no" />
+	<result property="memberMid" column="member_mid" /> 
+	<result property="emailAddress" column="email_address" /> 
+	<result property="emailName" column="email_name" /> 
+	<result property="emailTitle" column="email_title" /> 
+	<result property="emailDate" column="email_date"  /> 
+	<result property="emailContents" column="email_contents"/>  
+	<result property="emailMailBox" column="email_mailbox" />
+	<result property="emailChk" column="email_chk" /> 
+	<result property="emailDelete" column="email_delete" /> 
+
+	</resultMap>
+	
+	<resultMap id="attList" type="com.doubleu.email.vo.AttEmailVo">
+		<result property="filesNo" column="files_no"/>
+		<result property="emailNo" column="email_no"/>
+		<result property="sysFile" column="file_sysfile"/>
+		<result property="oriFile" column="file_orifile"/>
+	</resultMap>
+	
+	<resultMap id="revList" type="com.doubleu.email.vo.EmailReceiverVo">
+		<result property="emailReceiverNo" column="email_rev_no"/>
+		<result property="emailNo" column="email_no"/>
+		<result property="emailReceiverName" column="email_rev_name"/>
+		<result property="emailReceiverAddress" column="email_rev_address"/>
+		<result property="emailReceiverDept" column="email_rev_department"/>
+		<result property="emailReceiverRef" column="email_ref"/>
+		<result property="emailMid" column="email_mid"/>
+	</resultMap>
+	
+	
+	<resultMap id="memberList" type="com.doubleu.login.vo.LoginVo">
+ 
+	<result property="memberNo" column="member_no" /> 
+	<result property="memberMid" column="member_mid" /> 
+	<result property="memberPwd" column="member_pwd" /> 
+	<result property="memberName" column="member_name" /> 
+	<result property="memberEmail" column="member_email" /> 
+	<result property="memberDepartment" column="member_department"  />
+	<result property="memberTeam" column="member_team"  /> 
+	<result property="memberPhoneNumber" column="member_phonenumber"/>  
+	<result property="memberZipcode" column="member_zipcode" />
+	<result property="memberAddress" column="member_address" /> 
+	<result property="memberPosition" column="member_position" /> 
+	
+	</resultMap>
+</mapper>

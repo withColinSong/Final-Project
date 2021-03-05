@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.doubleu.notice.mybatis.FamilyeventMapper">
+	<insert id="insert" parameterType="com.doubleu.notice.vo.FamilyeventVo">
+		insert all
+		into FAMILYEVENT(
+			familyeventNo, 
+			familyeventSubject, 
+			familyeventMid, 
+			familyeventReportingDate, 
+			familyeventType, 
+			familyeventHit, 
+			familyeventDoc 
+			)
+		values(
+			seq_familyeventNo.nextval, 
+			#{familyeventSubject}, 
+			#{familyeventMid}, 
+			SYSDATE, 
+			#{familyeventType}, 
+			#{familyeventHit}, 
+			#{familyeventDoc} 
+			)
+		<if test="attList != null">
+			<foreach collection="attList" item="att">
+				into familyevent_files(
+					files_no, 
+					familyevent_no, 
+					file_sysfile, 
+					file_orifile
+				)
+				values(
+					seq_files_no.nextval,
+					seq_familyeventNo.currval,
+					#{att.sysFile, jdbcType=VARCHAR},
+					#{att.oriFile, jdbcType=VARCHAR}
+				)
+			</foreach>
+		</if>	
+		SELECT * FROM dual
+	</insert>
+	
+	<!-- 페이지 -->
+	<select id="totListSizeMain" resultType='int' parameterType="com.doubleu.notice.vo.NoticePage">
+		SELECT count(familyeventNo) 
+		FROM FAMILYEVENT
+		<if test="findStr !=''">
+         where familyeventSubject like '%${findStr}%' or familyeventDoc = '%${findStr}%'  
+      	</if>
+	</select>
+	
+ <select id="selectPaging" 
+	 resultMap="FamilyeventVo" 
+	 parameterType="com.doubleu.notice.vo.NoticePage">
+	
+		select familyeventNo, 
+			   familyeventSubject, 
+			   familyeventMid, 
+			   to_char(familyeventreportingdate, 'YYYY-MM-DD') as familyeventreportingdate, 
+			   familyeventType, 
+			   familyeventHit, 
+			   familyeventDoc 
+	     FROM (
+	        SELECT rownum no, m.* from (  
+	           SELECT * FROM FAMILYEVENT
+	           <if test="findStr !=''">
+		         where familyeventSubject like '%${findStr}%' or familyeventDoc = '%${findStr}%'  
+		      	</if>
+				ORDER BY familyeventNo DESC
+	           ) m
+	        ) WHERE no between ${startNo} and ${endNo}
+	</select>
+	
+	<select id="select" resultType="com.doubleu.notice.vo.FamilyeventVo">
+		<![CDATA[
+			select familyeventNo, 
+				   familyeventSubject, 
+				   familyeventMid, 
+				   to_char(familyeventreportingdate, 'YYYY-MM-DD') as familyeventreportingdate, 
+				   familyeventType, 
+				   familyeventHit, 
+				   familyeventDoc 
+			from FAMILYEVENT 
+			order by familyeventNo desc 
+		]]>
+	</select>
+	
+	<select id="view" parameterType="Int" resultType="com.doubleu.notice.vo.FamilyeventVo">
+		<![CDATA[
+			select familyeventNo, 
+				   familyeventSubject, 
+				   familyeventMid, 
+				   to_char(familyeventreportingdate, 'YYYY-MM-DD') as familyeventreportingdate, 
+				   familyeventType, 
+				   familyeventHit, 
+				   familyeventDoc 
+			from FAMILYEVENT
+			where familyeventNo = #{_parameter}
+		]]>
+	</select>
+	
+ 	<select id="view1" parameterType="int" resultMap="attList">
+		<![CDATA[
+			select files_no, 
+				   familyevent_no, 
+				   file_sysfile, 
+				   file_orifile 
+			from familyevent_files
+			where familyevent_no = #{_parameter}
+		]]>
+	</select>
+	
+	
+	<update id="update" parameterType="com.doubleu.notice.vo.FamilyeventVo" >
+		<![CDATA[
+			update FAMILYEVENT
+			set
+				familyeventSubject = #{familyeventSubject}, 
+				familyeventReportingdate = #{familyeventReportingDate}, 
+				familyeventType = #{familyeventType}, 
+				familyeventDoc = #{familyeventDoc} 
+			where familyeventNo = #{familyeventNo} 
+		]]>
+	</update>
+	
+	<!-- 조회수 -->
+	<update id="updateHit" parameterType="int">
+	<![CDATA[
+			update FAMILYEVENT 
+			set familyeventHit = familyeventHit + 1 
+			where familyeventNo = #{_parameter} 
+	]]>
+	</update>
+	
+	<select id="delete" parameterType="int">
+		<![CDATA[
+			delete from FAMILYEVENT where familyeventNo = #{_parameter}
+		]]>
+	</select>
+
+	<resultMap id="FamilyeventVo" type="com.doubleu.notice.vo.FamilyeventVo">
+		<result property="familyeventNo" column="familyeventNo"/>
+		<result property="familyeventSubject" column="familyeventSubject"/>
+		<result property="familyeventMid" column="familyeventMid"/>
+		<result property="familyeventReportingDate" column="familyeventReportingDate"/>
+		<result property="familyeventeventType" column="familyeventeventType"/>
+		<result property="familyeventeventHit" column="familyeventeventHit"/>
+		<result property="familyeventeventDoc" column="familyeventeventDoc"/>
+	</resultMap>
+
+	<resultMap id="attList" type="com.doubleu.notice.vo.FamilyeventAttVo">
+		<result property="filesNo" column="files_no"/>
+		<result property="familyeventNo" column="familyevent_no"/>
+		<result property="sysFile" column="file_sysfile"/>
+		<result property="oriFile" column="file_orifile"/>
+	</resultMap>
+	
+</mapper>
+
+		

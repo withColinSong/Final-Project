@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.doubleu.member.mybatis.MemberMapper">
+ <select id="selectManage" resultMap="selectProfileData">
+		<![CDATA[SELECT * FROM member where member_department like '관리부']]>
+	</select>
+	
+	<select id="selectBusiness" resultMap="selectProfileData">
+		<![CDATA[SELECT * FROM member where member_department like '영업부']]>
+	</select>
+	
+	<select id="selectIT" resultMap="selectProfileData">
+		<![CDATA[SELECT * FROM member where member_department like 'IT기술부']]>
+	</select>
+	
+	<select id="selectDevelop" resultMap="selectProfileData">
+		<![CDATA[SELECT * FROM member where member_team like '개발팀']]>
+	</select>
+	
+	<resultMap id="selectProfileData" type="com.doubleu.member.vo.MemberVo">
+ 
+	<result property="memberNo" column="member_no" /> 
+	<result property="memberMid" column="member_mid" /> 
+	<result property="memberPwd" column="member_pwd" /> 
+	<result property="memberName" column="member_name" /> 
+	<result property="memberEmail" column="member_email" /> 
+	<result property="memberDepartment" column="member_department"  />
+	<result property="memberTeam" column="member_team"  /> 
+	<result property="memberPhoneNumber" column="member_phonenumber"/>  
+	<result property="memberZipcode" column="member_zipcode" />
+	<result property="memberAddress" column="member_address" /> 
+	<result property="memberPosition" column="member_position" /> 
+	
+	</resultMap>
+	<select id="selectOne" parameterType="int" resultType="com.doubleu.member.vo.MemberVo">
+	<![CDATA[ select * from member where member_no = #{memberNo}	  ]]>
+	
+	</select>
+	<update id="memberUpdate" parameterType="com.doubleu.member.vo.MemberVo">
+		<![CDATA[
+		UPDATE member
+		SET
+			member_name = #{memberName},
+			member_email = #{memberEmail},
+			member_phonenumber = #{memberPhoneNumber},
+			member_zipcode = #{memberZipcode},
+			member_address = #{memberAddress}
+		WHERE
+			member_no = #{memberNo}
+		]]>
+	</update> 
+
+</mapper>
